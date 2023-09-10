@@ -38,8 +38,10 @@ class JobScraper:
             for job_listing in job_listings:
                 title = job_listing.find("h2").text.strip()
                 company = job_listing.find("p", class_="company").text.strip()
-                location = job_listing.find("p", class_="location").text.strip()
-                description = job_listing.find("div", class_="description").text.strip()
+                location = job_listing.find(
+                    "p", class_="location").text.strip()
+                description = job_listing.find(
+                    "div", class_="description").text.strip()
 
                 job = Job(title, company, location, description)
                 job_details.append(job)
