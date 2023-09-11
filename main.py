@@ -52,30 +52,34 @@ class JobScraper:
             logging.error(f"Error occurred during scraping: {e}")
             return []
 
+    def run(self):
+        """
+        Runs the job scraper and starts the Flask app.
+        """
+        app = Flask(__name__)
+        job_scraper = JobScraper("https://www.example.com/job-listings")
 
-app = Flask(__name__)
-scraper = JobScraper("https://www.example.com/job-listings")
+        @app.route("/")
+        def home():
+            """
+            Renders the home page.
+            """
+            return render_template("index.html")
 
+        @app.route("/job_listings")
+        def job_listings():
+            """
+            Renders the job listings page with scraped job details.
+            """
+            job_details = job_scraper.scrape_job_listings()
+            return render_template("job_listings.html", job_details=job_details)
 
-@app.route("/")
-def home():
-    """
-    Renders the home page.
-    """
-    return render_template("index.html")
-
-
-@app.route("/job_listings")
-def job_listings():
-    """
-    Renders the job listings page with scraped job details.
-    """
-    job_details = scraper.scrape_job_listings()
-    return render_template("job_listings.html", job_details=job_details)
+        try:
+            app.run()
+        except Exception as e:
+            logging.error(f"Error occurred during app execution: {e}")
 
 
 if __name__ == "__main__":
-    try:
-        app.run()
-    except Exception as e:
-        logging.error(f"Error occurred during app execution: {e}")
+    scraper = JobScraper("https://www.example.com/job-listings")
+    scraper.run()
